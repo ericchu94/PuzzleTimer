@@ -34,7 +34,11 @@ public class HistoryFragment extends Fragment {
 	public void addSolve(float duration) {
 		// TODO: Accept scramble. Maybe create a solve class, etc
 		solves.add(String.format("%.2f", duration));
-		adapter.notifyDataSetChanged();
+
+		if (adapter != null) {
+			// TODO Find out why adapter can be null
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	public void clearSolves() {
