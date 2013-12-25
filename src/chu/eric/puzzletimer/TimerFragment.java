@@ -142,6 +142,8 @@ public class TimerFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
 		outState.putString(ARG_SCRAMBLE, scramble);
 		outState.putInt(ARG_STATE, state.ordinal());
 		outState.putLong(ARG_START, start);
