@@ -84,4 +84,19 @@ public class SolvesOpenHelper extends SQLiteOpenHelper {
 		database.delete(SOLVES_TABLE_NAME, null, null);
 		database.close();
 	}
+
+	public void updateSolve(Solve solve) {
+		// only support updating flags
+		SQLiteDatabase database = getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_PLUSTWO, solve.getPlusTwo() ? 1 : 0);
+		values.put(COLUMN_DNF, solve.getDnf() ? 1 : 0);
+
+		database.update(SOLVES_TABLE_NAME, values, COLUMN_ID + " = ?",
+				new String[] { Integer.toString(solve.getId()) });
+
+		database.close();
+
+	}
 }

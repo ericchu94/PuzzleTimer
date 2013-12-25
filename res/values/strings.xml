@@ -6,5 +6,13 @@
     <string name="title_section1">Timer</string>
     <string name="title_section2">History</string>
     <string name="clear">Clear</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+
+    <string-array name="flags">
+        <item>+ 2</item>
+        <item>DNF</item>
+    </string-array>
 
 </resources>

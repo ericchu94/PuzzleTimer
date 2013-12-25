@@ -11,7 +11,7 @@ public class Solve implements Parcelable {
 
 	@Override
 	public String toString() {
-		return String.format("%.2f", duration);
+		return String.format("%.2f", duration + (plusTwo ? 2 : 0));
 	}
 
 	@Override
@@ -73,5 +73,13 @@ public class Solve implements Parcelable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public void setPlusTwo(boolean plusTwo) {
+		this.plusTwo = plusTwo;
+	}
+
+	public void setDnf(boolean dnf) {
+		this.dnf = dnf;
 	}
 }
