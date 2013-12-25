@@ -61,7 +61,7 @@ public class SolvesOpenHelper extends SQLiteOpenHelper {
 
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(TABLE_SOLVES, COLUMNS, null, null, null, null,
-				null);
+				COLUMN_ID + " DESC");
 		if (cursor.moveToFirst()) {
 			do {
 				Solve solve = new Solve(

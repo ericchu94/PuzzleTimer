@@ -15,8 +15,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class HistoryFragment extends Fragment implements
-		 OnItemClickListener {
+public class HistoryFragment extends Fragment implements OnItemClickListener {
 
 	List<Solve> solves;
 	private SolvesAdapter adapter;
@@ -43,7 +42,7 @@ public class HistoryFragment extends Fragment implements
 
 	public void addSolve(Solve solve) {
 		solve.setId(helper.addSolve(solve));
-		solves.add(solve);
+		solves.add(0, solve);
 
 		if (adapter != null) {
 			// TODO Find out why adapter can be null
