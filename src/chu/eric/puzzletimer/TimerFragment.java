@@ -102,7 +102,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			sManager.unregisterListener(accelerometerSensorEventListener);
 
 			((MainActivity) getActivity()).getHistoryFragment().addSolve(
-					duration);
+					new Solve(duration));
 			updateText(duration);
 
 			setScramble(scrambler.generateScramble(random));
