@@ -11,27 +11,30 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SolvesOpenHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 4;
 	private static final String DATABASE_NAME = "puzzleTimer";
-	private static final String SOLVES_TABLE_NAME = "solves";
+	private static final String TABLE_SOLVES = "solves";
 	private static final String COLUMN_ID = "_id";
+	private static final String COLUMN_SCRAMBLE = "scramble";
 	private static final String COLUMN_DURATION = "duration";
 	private static final String COLUMN_PLUSTWO = "plusTwo";
 	private static final String COLUMN_DNF = "dnf";
-	private static final String[] COLUMNS = { COLUMN_ID, COLUMN_DURATION,
-			COLUMN_PLUSTWO, COLUMN_DNF };
-	private static final String SOLVES_TABLE_CREATE = "CREATE TABLE "
-			+ SOLVES_TABLE_NAME + " (" + COLUMN_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_DURATION
-			+ " FLOAT, " + COLUMN_PLUSTWO + " BIT, " + COLUMN_DNF + " BIT);";
+	private static final String[] COLUMNS = { COLUMN_ID, COLUMN_SCRAMBLE,
+			COLUMN_DURATION, COLUMN_PLUSTWO, COLUMN_DNF };
 
 	@Override
-	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(SOLVES_TABLE_CREATE);
+	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(String
+				.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s FLOAT, %s BIT, %s BIT);",
+						TABLE_SOLVES, COLUMN_ID, COLUMN_SCRAMBLE,
+						COLUMN_DURATION, COLUMN_PLUSTWO, COLUMN_DNF));
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SOLVES);
+
+		onCreate(db);
 	}
 
 	SolvesOpenHelper(Context context) {
@@ -39,15 +42,15 @@ public class SolvesOpenHelper extends SQLiteOpenHelper {
 	}
 
 	public int addSolve(Solve solve) {
-		SQLiteDatabase database = getWritableDatabase();
+		SQLiteDatabase db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_DURATION, solve.getDuration());
 		values.put(COLUMN_PLUSTWO, solve.getPlusTwo() ? 1 : 0);
 		values.put(COLUMN_DNF, solve.getDnf() ? 1 : 0);
 
-		int id = (int) database.insert(SOLVES_TABLE_NAME, null, values);
-		database.close();
+		int id = (int) db.insert(TABLE_SOLVES, null, values);
+		db.close();
 
 		return id;
 	}
@@ -55,48 +58,48 @@ public class SolvesOpenHelper extends SQLiteOpenHelper {
 	public List<Solve> getAllSolves() {
 		List<Solve> solves = new ArrayList<Solve>();
 
-		SQLiteDatabase database = getReadableDatabase();
-		Cursor cursor = database.query(SOLVES_TABLE_NAME, COLUMNS, null, null,
-				null, null, null);
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor cursor = db.query(TABLE_SOLVES, COLUMNS, null, null, null, null,
+				null);
 		if (cursor.moveToFirst()) {
 			do {
-				Solve solve = new Solve(cursor.getInt(cursor
-						.getColumnIndex(COLUMN_ID)), cursor.getFloat(cursor
-						.getColumnIndex(COLUMN_DURATION)), cursor.getInt(cursor
-						.getColumnIndex(COLUMN_PLUSTWO)) != 0,
+				Solve solve = new Solve(
+						cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
+						cursor.getString(cursor.getColumnIndex(COLUMN_SCRAMBLE)),
+						cursor.getFloat(cursor.getColumnIndex(COLUMN_DURATION)),
+						cursor.getInt(cursor.getColumnIndex(COLUMN_PLUSTWO)) != 0,
 						cursor.getInt(cursor.getColumnIndex(COLUMN_DNF)) != 0);
 				solves.add(solve);
 			} while (cursor.moveToNext());
 		}
-		database.close();
+		db.close();
 		return solves;
 	}
 
 	public void deleteSolve(Solve solve) {
-		SQLiteDatabase database = getWritableDatabase();
-		database.delete(SOLVES_TABLE_NAME, COLUMN_ID + " = ?",
+		SQLiteDatabase db = getWritableDatabase();
+		db.delete(TABLE_SOLVES, COLUMN_ID + " = ?",
 				new String[] { Integer.toString(solve.getId()) });
-		database.close();
+		db.close();
 	}
 
 	public void clearSolves() {
-		SQLiteDatabase database = getWritableDatabase();
-		database.delete(SOLVES_TABLE_NAME, null, null);
-		database.close();
+		SQLiteDatabase db = getWritableDatabase();
+		db.delete(TABLE_SOLVES, null, null);
+		db.close();
 	}
 
 	public void updateSolve(Solve solve) {
 		// only support updating flags
-		SQLiteDatabase database = getWritableDatabase();
+		SQLiteDatabase db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_PLUSTWO, solve.getPlusTwo() ? 1 : 0);
 		values.put(COLUMN_DNF, solve.getDnf() ? 1 : 0);
 
-		database.update(SOLVES_TABLE_NAME, values, COLUMN_ID + " = ?",
+		db.update(TABLE_SOLVES, values, COLUMN_ID + " = ?",
 				new String[] { Integer.toString(solve.getId()) });
 
-		database.close();
-
+		db.close();
 	}
 }

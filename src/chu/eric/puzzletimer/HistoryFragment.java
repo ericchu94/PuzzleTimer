@@ -10,12 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class HistoryFragment extends Fragment implements
-		OnItemLongClickListener {
+		OnItemLongClickListener, OnItemClickListener {
 
 	List<Solve> solves;
 	private ArrayAdapter<Solve> adapter;
@@ -34,6 +35,7 @@ public class HistoryFragment extends Fragment implements
 				android.R.layout.simple_list_item_1, android.R.id.text1, solves);
 		solvesListView.setAdapter(adapter);
 
+		solvesListView.setOnItemClickListener(this);
 		solvesListView.setOnItemLongClickListener(this);
 
 		return rootView;
@@ -67,7 +69,9 @@ public class HistoryFragment extends Fragment implements
 
 		// popup dialog with 2 toggle buttons, one delete
 		new AlertDialog.Builder(getActivity())
-				.setMultiChoiceItems(R.array.flags, checkedItems,
+				.setMultiChoiceItems(
+						new String[] { getString(R.string.plusTwo),
+								getString(R.string.dnf) }, checkedItems,
 						new DialogInterface.OnMultiChoiceClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
@@ -99,5 +103,18 @@ public class HistoryFragment extends Fragment implements
 							}
 						}).show();
 		return true;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		Solve solve = (Solve) parent.getItemAtPosition(position);
+
+		new AlertDialog.Builder(getActivity()).setMessage(
+				String.format("%s: %s\n%s: %.2f\n%s: %s\n%s: %s",
+						getString(R.string.scramble), solve.getScramble(),
+						getString(R.string.duration), solve.getDuration(),
+						getString(R.string.plusTwo), solve.getPlusTwo(),
+						getString(R.string.dnf), solve.getDnf())).show();
 	}
 }

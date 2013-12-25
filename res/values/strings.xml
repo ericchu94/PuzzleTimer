@@ -9,10 +9,9 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
-
-    <string-array name="flags">
-        <item>+ 2</item>
-        <item>DNF</item>
-    </string-array>
+    <string name="scramble">Scramble</string>
+    <string name="duration">Duration</string>
+    <string name="plusTwo">+ 2</string>
+    <string name="dnf">DNF</string>
 
 </resources>
