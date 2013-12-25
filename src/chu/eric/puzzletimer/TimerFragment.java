@@ -52,6 +52,13 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		}
 	};
 
+	private Runnable timerClickableRunnable = new Runnable() {
+		@Override
+		public void run() {
+			timer.setClickable(true);
+		}
+	};
+
 	private static final int INITIAL_DELAY = 500;
 
 	private long start;
@@ -106,6 +113,9 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			updateText(duration);
 
 			setScramble(scrambler.generateScramble(random));
+
+			timer.setClickable(false);
+			handler.postDelayed(timerClickableRunnable, INITIAL_DELAY);
 			break;
 		}
 	}
