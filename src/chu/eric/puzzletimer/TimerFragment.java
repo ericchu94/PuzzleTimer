@@ -101,6 +101,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		switch (state) {
 		case Idle:
 			state = State.Solving;
+			timer.setKeepScreenOn(true);
 			start = System.currentTimeMillis();
 			handler.postDelayed(timerRunnable, 0);
 			if (PreferenceManager.getDefaultSharedPreferences(getActivity())
@@ -110,6 +111,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			break;
 		case Solving:
 			state = State.Idle;
+			timer.setKeepScreenOn(false);
 			sManager.unregisterListener(accelerometerSensorEventListener);
 
 			((MainActivity) getActivity()).getHistoryFragment().addSolve(
@@ -149,6 +151,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			// Timer running states need to start timer
 			if (state == State.Solving) {
 				handler.postDelayed(timerRunnable, 0);
+				timer.setKeepScreenOn(true);
 			} else {
 				// Only restore text state when static
 				setText(savedInstanceState.getString(ARG_TEXT, "0.00"));
