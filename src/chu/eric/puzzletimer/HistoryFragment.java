@@ -24,8 +24,6 @@ public class HistoryFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_main_history,
 				container, false);
 
-		preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
 		helper = new SolvesOpenHelper(getActivity());
 		solves = helper.getAllSolves();
 
