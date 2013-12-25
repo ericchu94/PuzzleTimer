@@ -18,6 +18,7 @@ import android.widget.TextView;
 public class TimerFragment extends Fragment implements OnClickListener {
 
 	public static final String ARG_SCRAMBLE = "scramble";
+	public static final String ARG_STATE = "state";
 
 	enum State {
 		Idle, Solving
@@ -54,7 +55,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	private Handler handler = new Handler();
 	private Scrambler scrambler = new RubiksCubeScrambler();
 
-	private State state = State.Idle;
+	private State state;
 
 	private Button timer;
 	private TextView scrambleTextView;
@@ -66,10 +67,6 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	public void setScramble(String scramble) {
 		this.scramble = scramble;
 		scrambleTextView.setText(scramble);
-	}
-
-	public String getScramble() {
-		return scramble;
 	}
 
 	@Override
@@ -112,7 +109,23 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		timer = (Button) rootView.findViewById(R.id.timer);
 		timer.setOnClickListener(this);
 
+		if (savedInstanceState != null) {
+			setScramble(savedInstanceState.getString(ARG_SCRAMBLE,
+					scrambler.generateScramble(random)));
+			state = State.values()[savedInstanceState.getInt(ARG_STATE, 0)];
+		} else {
+			// defaults
+			setScramble(scrambler.generateScramble(random));
+			state = State.Idle;
+		}
+
 		return rootView;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putString(ARG_SCRAMBLE, scramble);
+		outState.putInt(ARG_STATE, state.ordinal());
 	}
 
 	private void updateText(float text) {
