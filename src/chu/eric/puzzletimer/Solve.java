@@ -23,6 +23,7 @@ public class Solve {
 	public Solve(int id, String scramble, float duration, boolean plusTwo,
 			boolean dnf) {
 		this.id = id;
+		this.scramble = scramble;
 		this.duration = duration;
 		this.plusTwo = plusTwo;
 		this.dnf = dnf;

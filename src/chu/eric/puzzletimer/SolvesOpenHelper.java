@@ -45,6 +45,7 @@ public class SolvesOpenHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
+		values.put(COLUMN_SCRAMBLE, solve.getScramble());
 		values.put(COLUMN_DURATION, solve.getDuration());
 		values.put(COLUMN_PLUSTWO, solve.getPlusTwo() ? 1 : 0);
 		values.put(COLUMN_DNF, solve.getDnf() ? 1 : 0);
