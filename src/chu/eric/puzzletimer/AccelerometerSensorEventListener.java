@@ -27,8 +27,8 @@ public class AccelerometerSensorEventListener implements SensorEventListener {
 			return value;
 		}
 	}
-	
-	private static final float CHANGE_THRESHHOLD = 0.5f;
+
+	private static final float CHANGE_THRESHHOLD = 2f;
 	private static final int CONTACT_DURATION = 200;
 
 	List<SensorValue> sensorValues = new ArrayList<SensorValue>();

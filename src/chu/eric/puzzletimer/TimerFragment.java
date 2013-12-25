@@ -44,6 +44,16 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		}
 	};
 
+	private Runnable accelerometerStartRunnable = new Runnable() {
+		@Override
+		public void run() {
+			sManager.registerListener(accelerometerSensorEventListener,
+					accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+		}
+	};
+
+	private static final int INITIAL_DELAY = 500;
+
 	private long start;
 	private String scramble;
 	private String text;
@@ -85,8 +95,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			state = State.Solving;
 			start = System.currentTimeMillis();
 			handler.postDelayed(timerRunnable, 0);
-			sManager.registerListener(accelerometerSensorEventListener,
-					accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+			handler.postDelayed(accelerometerStartRunnable, INITIAL_DELAY);
 			break;
 		case Solving:
 			state = State.Idle;
@@ -143,7 +152,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+
 		outState.putString(ARG_SCRAMBLE, scramble);
 		outState.putInt(ARG_STATE, state.ordinal());
 		outState.putLong(ARG_START, start);
