@@ -16,10 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class HistoryFragment extends Fragment implements
-		OnItemLongClickListener, OnItemClickListener {
+		 OnItemClickListener {
 
 	List<Solve> solves;
-	private ArrayAdapter<Solve> adapter;
+	private SolvesAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,12 +31,10 @@ public class HistoryFragment extends Fragment implements
 		solves = helper.getAllSolves();
 
 		ListView solvesListView = (ListView) rootView.findViewById(R.id.solves);
-		adapter = new ArrayAdapter<Solve>(getActivity(),
-				android.R.layout.simple_list_item_1, android.R.id.text1, solves);
+		adapter = new SolvesAdapter(getActivity(), R.layout.item_solve, solves);
 		solvesListView.setAdapter(adapter);
 
 		solvesListView.setOnItemClickListener(this);
-		solvesListView.setOnItemLongClickListener(this);
 
 		return rootView;
 	}
@@ -60,9 +58,8 @@ public class HistoryFragment extends Fragment implements
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 		final Solve solve = (Solve) parent.getItemAtPosition(position);
 		final boolean[] checkedItems = new boolean[] { solve.getPlusTwo(),
 				solve.getDnf() };
@@ -102,19 +99,5 @@ public class HistoryFragment extends Fragment implements
 								adapter.notifyDataSetChanged();
 							}
 						}).show();
-		return true;
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		Solve solve = (Solve) parent.getItemAtPosition(position);
-
-		new AlertDialog.Builder(getActivity()).setMessage(
-				String.format("%s: %s\n%s: %.2f\n%s: %s\n%s: %s",
-						getString(R.string.scramble), solve.getScramble(),
-						getString(R.string.duration), solve.getDuration(),
-						getString(R.string.plusTwo), solve.getPlusTwo(),
-						getString(R.string.dnf), solve.getDnf())).show();
 	}
 }

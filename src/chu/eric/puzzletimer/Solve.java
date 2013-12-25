@@ -1,19 +1,11 @@
 package chu.eric.puzzletimer;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class Solve {
 	private int id;
 	private float duration;
 	private boolean plusTwo = false;
 	private boolean dnf = false;
 	private String scramble;
-
-	@Override
-	public String toString() {
-		return String.format("%.2f", duration + (plusTwo ? 2 : 0));
-	}
 
 	public Solve(String scramble, float duration) {
 		this.scramble = scramble;
@@ -59,5 +51,9 @@ public class Solve {
 
 	public String getScramble() {
 		return scramble;
+	}
+
+	public String getFormattedDuration() {
+		return String.format("%.2f", duration + (plusTwo ? 2 : 0));
 	}
 }
