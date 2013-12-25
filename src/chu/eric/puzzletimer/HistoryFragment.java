@@ -15,12 +15,8 @@ import android.widget.ListView;
 
 public class HistoryFragment extends Fragment {
 
-	private static final String ARG_SOLVES = "solves";
-
 	List<Solve> solves;
 	private ArrayAdapter<Solve> adapter;
-
-	private SharedPreferences preferences;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
