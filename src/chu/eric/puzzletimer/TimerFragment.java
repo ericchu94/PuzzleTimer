@@ -19,6 +19,8 @@ public class TimerFragment extends Fragment implements OnClickListener {
 
 	public static final String ARG_SCRAMBLE = "scramble";
 	public static final String ARG_STATE = "state";
+	public static final String ARG_START = "start";
+	public static final String ARG_TEXT = "text";
 
 	enum State {
 		Idle, Solving
@@ -44,6 +46,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 
 	private long start;
 	private String scramble;
+	private String text;
 
 	private SensorManager sManager;
 	private Sensor accelerometer;
@@ -62,6 +65,11 @@ public class TimerFragment extends Fragment implements OnClickListener {
 
 	private float getDuration() {
 		return (System.currentTimeMillis() - start) / 1000f;
+	}
+
+	private void setText(String text) {
+		this.text = text;
+		timer.setText(text);
 	}
 
 	public void setScramble(String scramble) {
@@ -113,10 +121,20 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			setScramble(savedInstanceState.getString(ARG_SCRAMBLE,
 					scrambler.generateScramble(random)));
 			state = State.values()[savedInstanceState.getInt(ARG_STATE, 0)];
+			start = savedInstanceState.getLong(ARG_START);
+
+			// Timer running states need to start timer
+			if (state == State.Solving) {
+				handler.postDelayed(timerRunnable, 0);
+			} else {
+				// Only restore text state when static
+				setText(savedInstanceState.getString(ARG_TEXT, "0.00"));
+			}
 		} else {
 			// defaults
 			setScramble(scrambler.generateScramble(random));
 			state = State.Idle;
+			setText("0.00");
 		}
 
 		return rootView;
@@ -126,9 +144,11 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putString(ARG_SCRAMBLE, scramble);
 		outState.putInt(ARG_STATE, state.ordinal());
+		outState.putLong(ARG_START, start);
+		outState.putString(ARG_TEXT, text);
 	}
 
 	private void updateText(float text) {
-		timer.setText(String.format("%.2f", text));
+		setText(String.format("%.2f", text));
 	}
 }
