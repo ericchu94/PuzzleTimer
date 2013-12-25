@@ -93,7 +93,7 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_clear:
-			historyFragment.solves.clear();
+			historyFragment.clearSolves();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -354,6 +354,11 @@ public class MainActivity extends FragmentActivity implements
 		public void addSolve(float duration) {
 			// TODO: Accept scramble. Maybe create a solve class, etc
 			solves.add(String.format("%.2f", duration));
+			adapter.notifyDataSetChanged();
+		}
+		
+		public void clearSolves() {
+			solves.clear();
 			adapter.notifyDataSetChanged();
 		}
 	}
