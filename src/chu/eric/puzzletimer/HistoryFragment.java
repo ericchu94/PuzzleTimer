@@ -54,6 +54,7 @@ public class HistoryFragment extends Fragment {
 	}
 
 	public void clearSolves() {
+		helper.clearSolves();
 		solves.clear();
 		adapter.notifyDataSetChanged();
 	}

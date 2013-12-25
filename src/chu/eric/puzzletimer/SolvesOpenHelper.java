@@ -78,4 +78,10 @@ public class SolvesOpenHelper extends SQLiteOpenHelper {
 				new String[] { Integer.toString(solve.getId()) });
 		database.close();
 	}
+
+	public void clearSolves() {
+		SQLiteDatabase database = getWritableDatabase();
+		database.delete(SOLVES_TABLE_NAME, null, null);
+		database.close();
+	}
 }
