@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,7 +103,10 @@ public class TimerFragment extends Fragment implements OnClickListener {
 			state = State.Solving;
 			start = System.currentTimeMillis();
 			handler.postDelayed(timerRunnable, 0);
-			handler.postDelayed(accelerometerStartRunnable, INITIAL_DELAY);
+			if (PreferenceManager.getDefaultSharedPreferences(getActivity())
+					.getBoolean(SettingsActivity.PREF_ACCELEROMETER, true)) {
+				handler.postDelayed(accelerometerStartRunnable, INITIAL_DELAY);
+			}
 			break;
 		case Solving:
 			state = State.Idle;
