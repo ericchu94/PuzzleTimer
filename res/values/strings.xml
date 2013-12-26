@@ -7,8 +7,6 @@
     <string name="title_section1">Timer</string>
     <string name="title_section2">History</string>
     <string name="clear">Clear</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="scramble">Scramble</string>
     <string name="duration">Duration</string>
@@ -16,5 +14,6 @@
     <string name="dnf">DNF</string>
     <string name="pref_accelerometer_summary"></string>
     <string name="pref_accelerometer">Accelerometer</string>
+    <string name="confirmClear">Clear history?</string>
 
 </resources>

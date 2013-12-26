@@ -84,7 +84,19 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_clear:
-			historyFragment.clearSolves();
+			new AlertDialog.Builder(this)
+					.setMessage(R.string.confirmClear)
+					.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									historyFragment.clearSolves();
+
+								}
+							}).setNegativeButton(android.R.string.cancel, null)
+					.show();
 			return true;
 		case R.id.action_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);

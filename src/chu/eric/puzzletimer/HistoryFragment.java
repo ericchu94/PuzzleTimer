@@ -75,7 +75,7 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 								checkedItems[which] = isChecked;
 							}
 						})
-				.setPositiveButton(R.string.ok,
+				.setPositiveButton(android.R.string.ok,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
@@ -86,7 +86,7 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 								adapter.notifyDataSetChanged();
 							}
 						})
-				.setNeutralButton(R.string.cancel, null)
+				.setNeutralButton(android.R.string.cancel, null)
 				.setNegativeButton(R.string.delete,
 						new DialogInterface.OnClickListener() {
 
