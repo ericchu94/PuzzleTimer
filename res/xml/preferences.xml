@@ -3,7 +3,8 @@
 
     <EditTextPreference
         android:key="pref_name"
-        android:title="@string/pref_name" />
+        android:title="@string/pref_name"
+        android:defaultValue="@string/anonymous" />
 
     <CheckBoxPreference
         android:defaultValue="true"

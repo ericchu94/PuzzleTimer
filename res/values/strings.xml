@@ -15,5 +15,6 @@
     <string name="pref_name">Name</string>
     <string name="pref_accelerometer">Accelerometer</string>
     <string name="confirmClear">Clear history?</string>
+    <string name="anonymous">Anonymous</string>
 
 </resources>
