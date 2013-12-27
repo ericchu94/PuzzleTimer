@@ -12,7 +12,7 @@
     <string name="duration">Duration</string>
     <string name="plusTwo">+ 2</string>
     <string name="dnf">DNF</string>
-    <string name="pref_accelerometer_summary"></string>
+    <string name="pref_name">Name</string>
     <string name="pref_accelerometer">Accelerometer</string>
     <string name="confirmClear">Clear history?</string>
 

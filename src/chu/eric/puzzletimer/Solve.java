@@ -2,23 +2,28 @@ package chu.eric.puzzletimer;
 
 public class Solve {
 	private int id;
+	private int matchId;
 	private float duration;
 	private boolean plusTwo = false;
 	private boolean dnf = false;
-	private String scramble;
+	private boolean personal = true;
+	private String name;
 
-	public Solve(String scramble, float duration) {
-		this.scramble = scramble;
+	public Solve(int matchId, float duration, String name) {
+		this.matchId = matchId;
 		this.duration = duration;
+		this.name = name;
 	}
 
-	public Solve(int id, String scramble, float duration, boolean plusTwo,
-			boolean dnf) {
+	public Solve(int id, int matchId, float duration, boolean plusTwo,
+			boolean dnf, boolean personal, String name) {
 		this.id = id;
-		this.scramble = scramble;
+		this.matchId = matchId;
 		this.duration = duration;
 		this.plusTwo = plusTwo;
 		this.dnf = dnf;
+		this.personal = personal;
+		this.name = name;
 	}
 
 	public float getDuration() {
@@ -49,11 +54,23 @@ public class Solve {
 		this.dnf = dnf;
 	}
 
-	public String getScramble() {
-		return scramble;
-	}
-
 	public String getFormattedDuration() {
 		return String.format("%.2f", duration + (plusTwo ? 2 : 0));
+	}
+
+	public int getMatchId() {
+		return matchId;
+	}
+
+	public boolean getPersonal() {
+		return personal;
+	}
+
+	public void setPersonal(boolean personal) {
+		this.personal = personal;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

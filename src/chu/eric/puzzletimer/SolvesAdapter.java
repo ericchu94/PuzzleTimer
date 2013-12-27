@@ -3,13 +3,13 @@ package chu.eric.puzzletimer;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class SolvesAdapter extends ArrayAdapter<Solve> {
@@ -34,8 +34,7 @@ public class SolvesAdapter extends ArrayAdapter<Solve> {
 
 		TextView duration = (TextView) convertView
 				.findViewById(R.id.solve_duration);
-		TextView scramble = (TextView) convertView
-				.findViewById(R.id.solve_scramble);
+		TextView name = (TextView) convertView.findViewById(R.id.solve_name);
 
 		duration.setText(solve.getFormattedDuration());
 		int flags = duration.getPaintFlags();
@@ -50,7 +49,7 @@ public class SolvesAdapter extends ArrayAdapter<Solve> {
 			duration.setTextColor(Color.BLACK);
 		}
 		duration.setPaintFlags(flags);
-		scramble.setText(solve.getScramble());
+		name.setText(solve.getName());
 
 		return convertView;
 

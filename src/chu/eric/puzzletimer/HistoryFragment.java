@@ -1,24 +1,25 @@
 package chu.eric.puzzletimer;
 
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class HistoryFragment extends Fragment implements OnItemClickListener {
 
-	List<Solve> solves;
-	private SolvesAdapter adapter;
+	List<Match> matches;
+	private MatchesAdapter adapter;
+	private PuzzleTimerOpenHelper helper;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,11 +27,12 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 		View rootView = inflater.inflate(R.layout.fragment_main_history,
 				container, false);
 
-		helper = new SolvesOpenHelper(getActivity());
-		solves = helper.getAllSolves();
+		helper = new PuzzleTimerOpenHelper(getActivity());
+		matches = helper.getAllMatches();
 
 		ListView solvesListView = (ListView) rootView.findViewById(R.id.solves);
-		adapter = new SolvesAdapter(getActivity(), R.layout.item_solve, solves);
+		adapter = new MatchesAdapter(getActivity(), R.layout.item_match,
+				matches);
 		solvesListView.setAdapter(adapter);
 
 		solvesListView.setOnItemClickListener(this);
@@ -38,28 +40,43 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 		return rootView;
 	}
 
-	private SolvesOpenHelper helper;
+	public void addSolve(String scramble, float duration) {
+		Match match = null;
+		for (Iterator<Match> iterator = matches.iterator(); iterator.hasNext();) {
+			Match m = iterator.next();
 
-	public void addSolve(Solve solve) {
-		solve.setId(helper.addSolve(solve));
-		solves.add(0, solve);
-
-		if (adapter != null) {
-			// TODO Find out why adapter can be null
-			adapter.notifyDataSetChanged();
+			if (m.getScramble().equals(scramble)) {
+				match = m;
+				break;
+			}
 		}
+
+		if (match == null) {
+			match = new Match(scramble);
+			match.setId(helper.addMatch(match));
+			matches.add(0, match);
+		}
+
+		Solve solve = new Solve(match.getId(), duration, PreferenceManager
+				.getDefaultSharedPreferences(getActivity()).getString(
+						SettingsActivity.PREF_NAME, ""));
+		solve.setId(helper.addSolve(solve));
+		match.addSolve(solve);
+
+		adapter.notifyDataSetChanged();
 	}
 
 	public void clearSolves() {
-		helper.clearSolves();
-		solves.clear();
+		helper.clearMatches();
+		matches.clear();
 		adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Solve solve = (Solve) parent.getItemAtPosition(position);
+		final Match match = (Match) parent.getItemAtPosition(position);
+		final Solve solve = match.getPersonalSolve();
 		final boolean[] checkedItems = new boolean[] { solve.getPlusTwo(),
 				solve.getDnf() };
 
@@ -93,8 +110,8 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								helper.deleteSolve(solve);
-								solves.remove(solve);
+								helper.deleteMatch(match);
+								matches.remove(match);
 								adapter.notifyDataSetChanged();
 							}
 						}).show();

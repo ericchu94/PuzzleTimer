@@ -5,6 +5,7 @@ import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity {
 
+	public static final String PREF_NAME = "pref_name";
 	public static final String PREF_ACCELEROMETER = "pref_accelerometer";
 
 	@Override
