@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,8 +33,23 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		public void run() {
 			// TODO Auto-generated method stub
 			if (state == State.Solving) {
-				updateText(getDuration());
+				float duration = getDuration();
+				setDuration(duration);
+				Log.d("TIMER_RUNNABLE", String.format("%.2f", duration));
 				handler.postDelayed(timerRunnable, 0);
+			}
+			else {
+				// Save shit moved from button click (off ui thread)
+				timer.setKeepScreenOn(false);
+				sManager.unregisterListener(accelerometerSensorEventListener);
+
+				((MainActivity) getActivity()).getHistoryFragment()
+						.addSolve(scramble, duration);
+
+				setScramble(scrambler.generateScramble(random));
+
+				timer.setClickable(false);
+				handler.postDelayed(timerClickableRunnable, INITIAL_DELAY);
 			}
 		}
 	};
@@ -65,6 +81,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	private long start;
 	private String scramble;
 	private String text;
+	private float duration;
 
 	private SensorManager sManager;
 	private Sensor accelerometer;
@@ -97,33 +114,28 @@ public class TimerFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		float duration = getDuration();
-		switch (state) {
-		case Idle:
-			state = State.Solving;
-			timer.setKeepScreenOn(true);
-			start = System.currentTimeMillis();
-			handler.postDelayed(timerRunnable, 0);
-			if (PreferenceManager.getDefaultSharedPreferences(getActivity())
-					.getBoolean(SettingsActivity.PREF_ACCELEROMETER, true)) {
-				handler.postDelayed(accelerometerStartRunnable, INITIAL_DELAY);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				switch (state) {
+				case Idle:
+					state = State.Solving;
+					timer.setKeepScreenOn(true);
+					start = System.currentTimeMillis();
+					handler.postDelayed(timerRunnable, 0);
+					if (PreferenceManager.getDefaultSharedPreferences(
+							getActivity()).getBoolean(
+							SettingsActivity.PREF_ACCELEROMETER, true)) {
+						handler.postDelayed(accelerometerStartRunnable,
+								INITIAL_DELAY);
+					}
+					break;
+				case Solving:
+					state = State.Idle;
+					break;
+				}
 			}
-			break;
-		case Solving:
-			state = State.Idle;
-			timer.setKeepScreenOn(false);
-			sManager.unregisterListener(accelerometerSensorEventListener);
-
-			((MainActivity) getActivity()).getHistoryFragment().addSolve(
-					scramble, duration);
-			updateText(duration);
-
-			setScramble(scrambler.generateScramble(random));
-
-			timer.setClickable(false);
-			handler.postDelayed(timerClickableRunnable, INITIAL_DELAY);
-			break;
-		}
+		}, 0);
 	}
 
 	@Override
@@ -176,7 +188,8 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		outState.putString(ARG_TEXT, text);
 	}
 
-	private void updateText(float text) {
-		setText(String.format("%.2f", text));
+	private void setDuration(float duration) {
+		this.duration = duration;
+		setText(String.format("%.2f", duration));
 	}
 }
