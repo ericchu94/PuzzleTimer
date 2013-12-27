@@ -12,19 +12,19 @@ public class RubiksCubeScrambler extends Scrambler {
 	private static final int MOVES = 20;
 
 	@Override
-	public String generateScramble(Random random) {
+	public String[] generateScramble(Random random) {
 
-		List<Move> scramble = new ArrayList<Move>();
+		Move[] moves = new Move[MOVES];
 
 		for (int i = 0; i < MOVES; ++i) {
 			Face[] faces = Face.values();
 			List<Face> validFaces = new ArrayList<Face>(Arrays.asList(faces));
 			if (i > 0) {
-				Face face1 = scramble.get(i - 1).face;
+				Face face1 = moves[i - 1].face;
 				validFaces.remove(face1);
 
 				if (i > 1) {
-					Face face2 = scramble.get(i - 2).face;
+					Face face2 = moves[i - 2].face;
 
 					int length = faces.length;
 					if ((face2.ordinal() + length / 2) % length == face1
@@ -36,10 +36,15 @@ public class RubiksCubeScrambler extends Scrambler {
 			Face face = validFaces.get(random.nextInt(validFaces.size()));
 			Turn[] turns = Turn.values();
 			Turn turn = turns[random.nextInt(turns.length)];
-			scramble.add(new Move(face, turn));
+			moves[i] = new Move(face, turn);
 		}
 
-		return TextUtils.join(" ", scramble);
+		String[] scramble = new String[MOVES];
+		for (int i = 0; i < scramble.length; ++i) {
+			scramble[i] = moves[i].toString();
+		}
+
+		return scramble;
 	}
 
 	@Override

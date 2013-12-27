@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	public static final String ARG_SCRAMBLE = "scramble";
 	public static final String ARG_STATE = "state";
 	public static final String ARG_START = "start";
-	public static final String ARG_TEXT = "text";
+	public static final String ARG_DURATION = "duration";
 
 	enum State {
 		Idle, Solving
@@ -37,14 +38,13 @@ public class TimerFragment extends Fragment implements OnClickListener {
 				setDuration(duration);
 				Log.d("TIMER_RUNNABLE", String.format("%.2f", duration));
 				handler.postDelayed(timerRunnable, 0);
-			}
-			else {
+			} else {
 				// Save shit moved from button click (off ui thread)
 				timer.setKeepScreenOn(false);
 				sManager.unregisterListener(accelerometerSensorEventListener);
 
-				((MainActivity) getActivity()).getHistoryFragment()
-						.addSolve(scramble, duration);
+				((MainActivity) getActivity()).getHistoryFragment().addSolve(
+						TextUtils.join(" ", scramble), duration);
 
 				setScramble(scrambler.generateScramble(random));
 
@@ -79,8 +79,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	private static final int INITIAL_DELAY = 500;
 
 	private long start;
-	private String scramble;
-	private String text;
+	private String[] scramble;
 	private float duration;
 
 	private SensorManager sManager;
@@ -102,14 +101,16 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		return (System.currentTimeMillis() - start) / 1000f;
 	}
 
-	private void setText(String text) {
-		this.text = text;
-		timer.setText(text);
-	}
-
-	public void setScramble(String scramble) {
+	public void setScramble(String[] scramble) {
 		this.scramble = scramble;
-		scrambleTextView.setText(scramble);
+
+		String[] first = new String[scramble.length / 2];
+		String[] second = new String[scramble.length / 2];
+		System.arraycopy(scramble, 0, first, 0, first.length);
+		System.arraycopy(scramble, second.length, second, 0, second.length);
+
+		scrambleTextView.setText(String.format("%s\n%s",
+				TextUtils.join(" ", first), TextUtils.join(" ", second)));
 	}
 
 	@Override
@@ -155,8 +156,7 @@ public class TimerFragment extends Fragment implements OnClickListener {
 		timer.setOnClickListener(this);
 
 		if (savedInstanceState != null) {
-			setScramble(savedInstanceState.getString(ARG_SCRAMBLE,
-					scrambler.generateScramble(random)));
+			setScramble(savedInstanceState.getStringArray(ARG_SCRAMBLE));
 			state = State.values()[savedInstanceState.getInt(ARG_STATE, 0)];
 			start = savedInstanceState.getLong(ARG_START);
 
@@ -166,13 +166,13 @@ public class TimerFragment extends Fragment implements OnClickListener {
 				timer.setKeepScreenOn(true);
 			} else {
 				// Only restore text state when static
-				setText(savedInstanceState.getString(ARG_TEXT, "0.00"));
+				setDuration(savedInstanceState.getFloat(ARG_DURATION, 0));
 			}
 		} else {
 			// defaults
 			setScramble(scrambler.generateScramble(random));
 			state = State.Idle;
-			setText("0.00");
+			setDuration(0);
 		}
 
 		return rootView;
@@ -182,14 +182,14 @@ public class TimerFragment extends Fragment implements OnClickListener {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putString(ARG_SCRAMBLE, scramble);
+		outState.putStringArray(ARG_SCRAMBLE, scramble);
 		outState.putInt(ARG_STATE, state.ordinal());
 		outState.putLong(ARG_START, start);
-		outState.putString(ARG_TEXT, text);
+		outState.putFloat(ARG_DURATION, duration);
 	}
 
 	private void setDuration(float duration) {
 		this.duration = duration;
-		setText(String.format("%.2f", duration));
+		timer.setText(String.format("%.2f", duration));
 	}
 }
