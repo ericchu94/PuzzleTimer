@@ -1,5 +1,7 @@
 package chu.eric.puzzletimer.dal;
 
+import java.util.Locale;
+
 public class Solve implements Comparable<Solve> {
 	private int id;
 	private int matchId;
@@ -59,7 +61,7 @@ public class Solve implements Comparable<Solve> {
 	}
 
 	public String getDurationString() {
-		return String.format("%.2f", getFormattedDuration());
+		return String.format(Locale.US, "%.2f", getFormattedDuration());
 	}
 
 	public int getMatchId() {

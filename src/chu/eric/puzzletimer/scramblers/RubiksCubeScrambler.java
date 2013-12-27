@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import android.text.TextUtils;
-
 public class RubiksCubeScrambler extends Scrambler {
 
 	private static final int MOVES = 20;
