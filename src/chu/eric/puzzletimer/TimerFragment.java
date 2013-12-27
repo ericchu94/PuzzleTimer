@@ -116,8 +116,6 @@ public class TimerFragment extends Fragment implements OnClickListener {
 
 			((MainActivity) getActivity()).getHistoryFragment().addSolve(
 					scramble, duration);
-			((MainActivity) getActivity()).getHistoryFragment().addSolve(
-					scramble, duration + 2);
 			updateText(duration);
 
 			setScramble(scrambler.generateScramble(random));
