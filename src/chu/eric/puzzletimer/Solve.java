@@ -1,6 +1,6 @@
 package chu.eric.puzzletimer;
 
-public class Solve {
+public class Solve implements Comparable<Solve> {
 	private int id;
 	private int matchId;
 	private float duration;
@@ -54,8 +54,12 @@ public class Solve {
 		this.dnf = dnf;
 	}
 
-	public String getFormattedDuration() {
-		return String.format("%.2f", duration + (plusTwo ? 2 : 0));
+	private float getFormattedDuration() {
+		return duration + (plusTwo ? 2 : 0);
+	}
+
+	public String getDurationString() {
+		return String.format("%.2f", getFormattedDuration());
 	}
 
 	public int getMatchId() {
@@ -72,5 +76,12 @@ public class Solve {
 
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int compareTo(Solve another) {
+		return Float.compare(another.getFormattedDuration(),
+				getFormattedDuration());
+
 	}
 }

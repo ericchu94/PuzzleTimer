@@ -20,6 +20,7 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 	List<Match> matches;
 	private MatchesAdapter adapter;
 	private PuzzleTimerOpenHelper helper;
+	private ListView matchesListView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,19 +31,20 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 		helper = new PuzzleTimerOpenHelper(getActivity());
 		matches = helper.getAllMatches();
 
-		ListView solvesListView = (ListView) rootView.findViewById(R.id.solves);
+		matchesListView = (ListView) rootView.findViewById(R.id.solves);
 		adapter = new MatchesAdapter(getActivity(), R.layout.item_match,
 				matches);
-		solvesListView.setAdapter(adapter);
+		matchesListView.setAdapter(adapter);
 
-		solvesListView.setOnItemClickListener(this);
+		matchesListView.setOnItemClickListener(this);
 
 		return rootView;
 	}
 
 	public void addSolve(String scramble, float duration) {
 		Match match = null;
-		for (Iterator<Match> iterator = matches.iterator(); iterator.hasNext();) {
+		int index = 0;
+		for (Iterator<Match> iterator = matches.iterator(); iterator.hasNext(); ++index) {
 			Match m = iterator.next();
 
 			if (m.getScramble().equals(scramble)) {
@@ -51,7 +53,10 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 			}
 		}
 
+		boolean newMatch = false;
 		if (match == null) {
+			newMatch = true;
+
 			match = new Match(scramble);
 			match.setId(helper.addMatch(match));
 			matches.add(0, match);
@@ -63,7 +68,12 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 		solve.setId(helper.addSolve(solve));
 		match.addSolve(solve);
 
-		adapter.notifyDataSetChanged();
+		if (newMatch) {
+			adapter.notifyDataSetChanged();
+		} else {
+			adapter.getView(index, matchesListView.getChildAt(index),
+					matchesListView);
+		}
 	}
 
 	public void clearSolves() {
@@ -73,8 +83,8 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view,
+			final int position, long id) {
 		final Match match = (Match) parent.getItemAtPosition(position);
 		final Solve solve = match.getPersonalSolve();
 		final boolean[] checkedItems = new boolean[] { solve.getPlusTwo(),
@@ -100,7 +110,10 @@ public class HistoryFragment extends Fragment implements OnItemClickListener {
 								solve.setPlusTwo(checkedItems[0]);
 								solve.setDnf(checkedItems[1]);
 								helper.updateSolve(solve);
-								adapter.notifyDataSetChanged();
+
+								adapter.getView(position,
+										matchesListView.getChildAt(position),
+										matchesListView);
 							}
 						})
 				.setNeutralButton(android.R.string.cancel, null)

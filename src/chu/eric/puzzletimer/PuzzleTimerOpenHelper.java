@@ -157,7 +157,7 @@ public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
 		values.put(SOLVES_PLUSTWO, solve.getPlusTwo() ? 1 : 0);
 		values.put(SOLVES_DNF, solve.getDnf() ? 1 : 0);
 
-		db.update(SOLVES, values, MATCHES_ID + " = ?",
+		db.update(SOLVES, values, SOLVES_ID + " = ?",
 				new String[] { Integer.toString(solve.getId()) });
 
 		db.close();
