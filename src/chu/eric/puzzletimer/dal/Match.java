@@ -1,4 +1,4 @@
-package chu.eric.puzzletimer;
+package chu.eric.puzzletimer.dal;
 
 import java.util.ArrayList;
 import java.util.Iterator;

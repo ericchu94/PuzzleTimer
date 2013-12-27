@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import chu.eric.puzzletimer.dal.Match;
+import chu.eric.puzzletimer.dal.Solve;
 
 public class MatchesAdapter extends ArrayAdapter<Match> {
 
@@ -60,8 +62,7 @@ public class MatchesAdapter extends ArrayAdapter<Match> {
 	}
 
 	private void setupSolveView(View view, Solve solve) {
-		TextView duration = (TextView) view
-				.findViewById(R.id.solve_duration);
+		TextView duration = (TextView) view.findViewById(R.id.solve_duration);
 		TextView name = (TextView) view.findViewById(R.id.solve_name);
 
 		duration.setText(solve.getDurationString());

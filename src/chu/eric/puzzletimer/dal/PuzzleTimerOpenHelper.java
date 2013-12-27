@@ -1,4 +1,4 @@
-package chu.eric.puzzletimer;
+package chu.eric.puzzletimer.dal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
-	PuzzleTimerOpenHelper(Context context) {
+	public PuzzleTimerOpenHelper(Context context) {
 		super(context, NAME, null, VERSION);
 	}
 

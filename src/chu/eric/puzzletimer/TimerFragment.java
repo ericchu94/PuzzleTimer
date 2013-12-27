@@ -17,6 +17,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import chu.eric.puzzletimer.scramblers.RubiksCubeScrambler;
+import chu.eric.puzzletimer.scramblers.Scrambler;
 
 public class TimerFragment extends Fragment implements OnClickListener {
 

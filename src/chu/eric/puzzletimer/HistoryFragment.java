@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import chu.eric.puzzletimer.dal.Match;
+import chu.eric.puzzletimer.dal.PuzzleTimerOpenHelper;
+import chu.eric.puzzletimer.dal.Solve;
 
 public class HistoryFragment extends Fragment implements OnItemClickListener {
 

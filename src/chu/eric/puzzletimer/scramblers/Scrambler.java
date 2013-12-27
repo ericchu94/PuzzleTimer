@@ -1,4 +1,4 @@
-package chu.eric.puzzletimer;
+package chu.eric.puzzletimer.scramblers;
 
 import java.util.Random;
 

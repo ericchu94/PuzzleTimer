@@ -1,4 +1,4 @@
-package chu.eric.puzzletimer;
+package chu.eric.puzzletimer.dal;
 
 public class Solve implements Comparable<Solve> {
 	private int id;
