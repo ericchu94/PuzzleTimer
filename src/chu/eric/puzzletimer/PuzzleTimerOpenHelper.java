@@ -126,26 +126,16 @@ public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
 
 	public void deleteMatch(Match match) {
 		SQLiteDatabase db = getWritableDatabase();
-		db.delete(MATCHES, MATCHES_ID + " = ?",
-				new String[] { Integer.toString(match.getId()) });
+		String[] whereArgs = new String[] { Integer.toString(match.getId()) };
+		db.delete(MATCHES, MATCHES_ID + " = ?", whereArgs);
+		db.delete(SOLVES, SOLVES_MATCHID + " = ?", whereArgs);
 		db.close();
 	}
 
 	public void clearMatches() {
 		SQLiteDatabase db = getWritableDatabase();
 		db.delete(MATCHES, null, null);
-		db.close();
-	}
-
-	public void updateMatch(Match match) {
-		// only support updating flags
-		SQLiteDatabase db = getWritableDatabase();
-
-		ContentValues values = new ContentValues();
-
-		db.update(MATCHES, values, MATCHES_ID + " = ?",
-				new String[] { Integer.toString(match.getId()) });
-
+		db.delete(SOLVES, null, null);
 		db.close();
 	}
 
