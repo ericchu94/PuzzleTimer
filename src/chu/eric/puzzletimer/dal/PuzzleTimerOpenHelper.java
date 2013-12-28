@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
-	private static final int VERSION = 9;
+	private static final int VERSION = 10;
 	private static final String NAME = "puzzleTimer";
 
 	private static final String MATCHES = "matches";
@@ -38,10 +38,10 @@ public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
 				.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT);",
 						MATCHES, MATCHES_ID, MATCHES_SCRAMBLE));
 		db.execSQL(String
-				.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s FLOAT, %s BIT, %s BIT, %s BIT, %s TEXT);",
+				.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER NOT NULL, %s FLOAT, %s BIT, %s BIT, %s BIT, %s TEXT, FOREIGN KEY(%s) REFERENCES %s(%s) ON DELETE CASCADE);",
 						SOLVES, SOLVES_ID, SOLVES_MATCHID, SOLVES_DURATION,
 						SOLVES_PLUSTWO, SOLVES_DNF, SOLVES_PERSONAL,
-						SOLVES_NAME));
+						SOLVES_NAME, SOLVES_MATCHID, MATCHES, MATCHES_ID));
 	}
 
 	@Override
@@ -50,6 +50,13 @@ public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + SOLVES);
 
 		onCreate(db);
+	}
+
+	@Override
+	public void onConfigure(SQLiteDatabase db) {
+		super.onConfigure(db);
+
+		db.setForeignKeyConstraintsEnabled(true);
 	}
 
 	public PuzzleTimerOpenHelper(Context context) {
@@ -128,14 +135,16 @@ public class PuzzleTimerOpenHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		String[] whereArgs = new String[] { Integer.toString(match.getId()) };
 		db.delete(MATCHES, MATCHES_ID + " = ?", whereArgs);
-		db.delete(SOLVES, SOLVES_MATCHID + " = ?", whereArgs);
+		// Solves deleted from foreign key constraint
+		// db.delete(SOLVES, SOLVES_MATCHID + " = ?", whereArgs);
 		db.close();
 	}
 
 	public void clearMatches() {
 		SQLiteDatabase db = getWritableDatabase();
 		db.delete(MATCHES, null, null);
-		db.delete(SOLVES, null, null);
+		// Solves deleted from foreign key constraint
+		// db.delete(SOLVES, null, null);
 		db.close();
 	}
 
